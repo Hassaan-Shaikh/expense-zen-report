@@ -51,7 +51,15 @@ const ExpensePieChart = () => {
                 ))}
               </Pie>
               <Tooltip 
-                formatter={(value) => [`$${value.toFixed(2)}`, 'Amount']}
+                formatter={(value) => {
+                  // Ensure value is a number before using toFixed
+                  return [
+                    typeof value === 'number' 
+                      ? `$${value.toFixed(2)}` 
+                      : `$${value}`, 
+                    'Amount'
+                  ];
+                }}
               />
             </PieChart>
           </ResponsiveContainer>
