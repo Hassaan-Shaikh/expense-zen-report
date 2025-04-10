@@ -1,13 +1,24 @@
 
-import { transactions } from "@/lib/data";
+import { Transaction, transactions } from "@/lib/data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import TransactionItem from "@/components/Transactions/TransactionItem";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 
-const RecentTransactions = () => {
+interface RecentTransactionsProps {
+  customTransactions?: Transaction[];
+  onDelete?: (id: string) => void;
+}
+
+const RecentTransactions: React.FC<RecentTransactionsProps> = ({ 
+  customTransactions,
+  onDelete
+}) => {
+  // Use custom transactions if provided, otherwise use the default transactions
+  const transactionsToShow = customTransactions || transactions;
+  
   // Get the 5 most recent transactions
-  const recentTransactions = [...transactions]
+  const recentTransactions = [...transactionsToShow]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 5);
   
@@ -22,7 +33,11 @@ const RecentTransactions = () => {
       <CardContent>
         <div className="space-y-4">
           {recentTransactions.map((transaction) => (
-            <TransactionItem key={transaction.id} transaction={transaction} />
+            <TransactionItem 
+              key={transaction.id} 
+              transaction={transaction}
+              onDelete={onDelete}
+            />
           ))}
         </div>
       </CardContent>
