@@ -1,22 +1,22 @@
 
 import { useState } from "react";
 import RecentTransactions from "./RecentTransactions";
-import { Transaction } from "@/lib/data";
+import { Transaction, transactions } from "@/lib/data";
 
 interface TransactionsWrapperProps {
   initialTransactions?: Transaction[];
 }
 
 const TransactionsWrapper: React.FC<TransactionsWrapperProps> = ({ initialTransactions }) => {
-  const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions || []);
+  const [transactionList, setTransactionList] = useState<Transaction[]>(initialTransactions || transactions);
 
   const handleDeleteTransaction = (id: string) => {
-    setTransactions((current) => current.filter(t => t.id !== id));
+    setTransactionList((current) => current.filter(t => t.id !== id));
   };
 
   return (
     <RecentTransactions 
-      customTransactions={transactions}
+      customTransactions={transactionList}
       onDelete={handleDeleteTransaction}
     />
   );
