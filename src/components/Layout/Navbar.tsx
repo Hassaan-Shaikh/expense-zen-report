@@ -3,6 +3,7 @@ import { Bell, Menu, Search, UserCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -17,7 +18,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
         <Button variant="ghost" size="icon" onClick={onToggleSidebar}>
           <Menu className="h-5 w-5" />
         </Button>
-        <div className="hidden md:flex">
+        <div className={cn(isMobile ? "flex" : "hidden md:flex")}>
           <h1 className="text-xl font-bold text-expense-purple">ExpenseZen</h1>
         </div>
       </div>

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Layout/Navbar";
 import Sidebar from "@/components/Layout/Sidebar";
 import Summary from "@/components/Dashboard/Summary";
-import RecentTransactions from "@/components/Dashboard/RecentTransactions";
+import TransactionsWrapper from "@/components/Dashboard/TransactionsWrapper";
 import ExpensePieChart from "@/components/Charts/ExpensePieChart";
 import SpendingTrendChart from "@/components/Charts/SpendingTrendChart";
 import BudgetProgress from "@/components/Budgets/BudgetProgress";
@@ -47,7 +47,7 @@ const Index = () => {
                 <SpendingTrendChart />
                 <ExpensePieChart />
                 <BudgetProgress />
-                <RecentTransactions />
+                <TransactionsWrapper />
               </div>
             </div>
           </div>
