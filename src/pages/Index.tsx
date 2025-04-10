@@ -17,12 +17,16 @@ const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
   const [showTransactionForm, setShowTransactionForm] = useState(false);
   
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+  
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
-      <div className="flex flex-1 flex-col">
-        <Navbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+      <div className={`flex flex-1 flex-col transition-all duration-300`}>
+        <Navbar onToggleSidebar={toggleSidebar} />
         
         <main className="flex-1 p-4 md:p-6">
           <div className="mx-auto max-w-7xl">

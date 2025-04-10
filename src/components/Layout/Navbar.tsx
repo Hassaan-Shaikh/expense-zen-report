@@ -14,7 +14,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
   return (
     <div className="flex h-16 items-center justify-between border-b px-4 md:px-6">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={onToggleSidebar} className="md:hidden">
+        <Button variant="ghost" size="icon" onClick={onToggleSidebar}>
           <Menu className="h-5 w-5" />
         </Button>
         <div className="hidden md:flex">
