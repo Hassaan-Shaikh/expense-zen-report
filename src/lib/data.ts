@@ -36,7 +36,7 @@ export const categories: Category[] = [
   { id: 'income', name: 'Income', icon: 'dollar-sign', color: 'category-gradient-4' },
 ];
 
-export const transactions: Transaction[] = [
+export let transactions: Transaction[] = [
   {
     id: '1',
     amount: 42.50,

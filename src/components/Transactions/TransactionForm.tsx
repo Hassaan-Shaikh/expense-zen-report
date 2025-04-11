@@ -1,7 +1,9 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { categories } from "@/lib/data";
 import { Button } from "@/components/ui/button";
+import { transactions } from "@/lib/data";
+import useTransactionStore from "@/store/Transaction";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -28,13 +30,19 @@ interface TransactionFormProps {
   onClose: () => void;
 }
 
+function generate16BitId(): number {
+  // Generate a random number between 0 and 65535 (inclusive)
+  return Math.floor(Math.random() * 65536);
+}
+
 const TransactionForm: React.FC<TransactionFormProps> = ({ isOpen, onClose }) => {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [type, setType] = useState<"income" | "expense">("expense");
   const [date, setDate] = useState(format(new Date(), "yyyy-MM-dd"));
-  
+  const {transactions, setTransactions} = useTransactionStore();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -43,12 +51,29 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ isOpen, onClose }) =>
       toast.error("Please fill all required fields");
       return;
     }
+
+    const TransactionObject = {
+      
+        id: generate16BitId().toString(),
+        amount: parseFloat(amount),
+        description: description,
+        date: date,
+        categoryId: categoryId,
+        type: type,
+      
+    }
+
+    setTransactions(TransactionObject);
     
     // In a real app, we would save the transaction here
     toast.success("Transaction added successfully");
     resetForm();
     onClose();
   };
+
+  useEffect(() => {
+    console.log(transactions);
+  }, [transactions])
   
   const resetForm = () => {
     setDescription("");

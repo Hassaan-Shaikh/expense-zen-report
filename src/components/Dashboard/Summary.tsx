@@ -2,9 +2,11 @@
 import { getTotalExpenses, getTotalIncome, getBudgetStatus } from "@/lib/data";
 import { ArrowDown, ArrowUp, Wallet } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import useTransactionStore from "@/store/Transaction";
 import { Progress } from "@/components/ui/progress";
 
 const Summary = () => {
+  const {transactions, getTotalIncome, getTotalExpenses} = useTransactionStore();
   const totalIncome = getTotalIncome();
   const totalExpenses = getTotalExpenses();
   const balance = totalIncome - totalExpenses;
