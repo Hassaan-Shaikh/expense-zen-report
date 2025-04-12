@@ -15,6 +15,7 @@ interface TransactionState {
     getTotalIncome: () => number;
     getTotalExpenses: () => number;
     setTransactions: (newTransaction: TransactionType) => void;
+    deleteTransaction: (id: string) => void;
 }
 
 const useTransactionStore = create<TransactionState>((set, get) => ({
@@ -116,6 +117,10 @@ const useTransactionStore = create<TransactionState>((set, get) => ({
     
     setTransactions: (newTransaction) => set(state => ({
         transactions: [...state.transactions, newTransaction]
+    })),
+
+    deleteTransaction: (id) => set((state) => ({
+      transactions: state.transactions.filter((transaction) => transaction.id !== id),
     }))
 }));
 

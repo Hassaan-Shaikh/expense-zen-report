@@ -4,15 +4,22 @@ import { ArrowDown, ArrowUp, Wallet } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useTransactionStore from "@/store/Transaction";
 import { Progress } from "@/components/ui/progress";
+import { useEffect } from "react";
 
 const Summary = () => {
   const {transactions, getTotalIncome, getTotalExpenses} = useTransactionStore();
   const totalIncome = getTotalIncome();
   const totalExpenses = getTotalExpenses();
+  const totalBudget = 1500;
   const balance = totalIncome - totalExpenses;
-  const { total: budgetTotal, used: budgetUsed } = getBudgetStatus();
-  const budgetPercentage = Math.round((budgetUsed / budgetTotal) * 100);
+  // const { total: budgetTotal, used: budgetUsed } = getBudgetStatus();
+  const used = transactions.filter(t => t.type === 'expense').reduce((sum, budget) => sum + budget.amount, 0);
+  const budgetPercentage = Math.round((used / totalBudget) * 100);
   
+  useEffect(() => {
+    console.log(totalIncome)
+  },[totalIncome]);
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card className="animate-fade-in">
@@ -62,7 +69,7 @@ const Summary = () => {
               {budgetPercentage}%
             </div>
             <div className="text-sm text-muted-foreground">
-              ${budgetUsed.toFixed(0)}/${budgetTotal.toFixed(0)}
+              ${used.toFixed(0)}/${totalBudget.toFixed(0)}
             </div>
           </div>
           <Progress value={budgetPercentage} className="mt-2" />

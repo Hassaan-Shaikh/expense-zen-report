@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import useTransactionStore from "@/store/Transaction";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "@/hooks/use-toast";
 import { 
@@ -40,6 +41,7 @@ import {
 } from "@/components/ui/drawer";
 import { Transaction, transactions } from "@/lib/data";
 import TransactionItem from "@/components/Transactions/TransactionItem";
+import TransactionForm from "../Transactions/TransactionForm";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -48,9 +50,11 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const isMobile = useIsMobile();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [isRemoveTransactionsOpen, setIsRemoveTransactionsOpen] = useState(false);
+  const {transactions, getTotalIncome, getTotalExpenses, deleteTransaction} = useTransactionStore();
   const [userTransactions, setUserTransactions] = useState<Transaction[]>(transactions);
+  const [showTransactionForm, setShowTransactionForm] = useState(false);
   
   // Function for downloading reports
   const downloadReport = (type: 'monthly' | 'annual' | 'export') => {
@@ -97,7 +101,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
   // Function to handle transaction deletion
   const handleDeleteTransaction = (id: string) => {
-    setUserTransactions((current) => current.filter(t => t.id !== id));
+    deleteTransaction(id);
     toast({
       title: "Transaction Removed",
       description: "The transaction has been successfully removed.",
@@ -113,6 +117,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   if (isMobile) {
     return (
       <>
+      <TransactionForm 
+        isOpen={showTransactionForm} 
+        onClose={() => setShowTransactionForm(false)} 
+      />
         <Sheet open={isOpen} onOpenChange={(open) => {
           if (!open) onClose();
         }}>
@@ -125,9 +133,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 </Button>
               </div>
               
-              <Button variant="gradient" className="mx-4 mt-2 expense-gradient-bg">
+              {/* <Button variant="gradient" className="mx-4 mt-2 expense-gradient-bg"
+              onClick={() => setShowTransactionForm(true)}>
                 <Plus className="mr-2 h-4 w-4" /> Add Transaction
-              </Button>
+              </Button> */}
               
               <nav className="mt-8 flex flex-1 flex-col gap-1 px-2">
                 <NavItem 
@@ -251,6 +260,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   // Desktop view
   return (
     <>
+    <TransactionForm 
+        isOpen={showTransactionForm} 
+        onClose={() => setShowTransactionForm(false)} 
+      />
       <div 
         className={cn(
           "fixed inset-y-0 left-0 z-50 flex flex-col border-r bg-card shadow-sm transition-all duration-300 ease-in-out",
@@ -274,7 +287,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </Button>
         </div>
         
-        {!isCollapsed ? (
+        {/* {!isCollapsed ? (
           <Button variant="gradient" className="mx-4 mt-2 expense-gradient-bg">
             <Plus className="mr-2 h-4 w-4" /> Add Transaction
           </Button>
@@ -282,7 +295,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           <Button variant="gradient" className="mx-auto mt-2 h-10 w-10 expense-gradient-bg p-0">
             <Plus className="h-5 w-5" />
           </Button>
-        )}
+        )} */}
         
         <nav className="mt-8 flex flex-1 flex-col gap-1 px-2">
           <NavItem 
@@ -385,8 +398,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             <DrawerDescription>Select transactions to remove</DrawerDescription>
           </DrawerHeader>
           <div className="px-4 py-2 max-h-[60vh] overflow-y-auto">
-            {userTransactions.length > 0 ? (
-              userTransactions.map((transaction) => (
+            {transactions.length > 0 ? (
+              transactions.map((transaction) => (
                 <TransactionItem 
                   key={transaction.id} 
                   transaction={transaction} 

@@ -1,12 +1,13 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getTransactionsByCategory } from "@/lib/data";
+import useTransactionStore from "@/store/Transaction";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
 const COLORS = [
   "#8B5CF6", // Purple
   "#33C3F0", // Blue
-  "#14B8A6", // Teal
+  "#020202", // Almost Black
   "#10B981", // Green
   "#F59E0B", // Yellow
   "#F97316", // Orange
@@ -16,10 +17,30 @@ const COLORS = [
 
 const ExpensePieChart = () => {
   const categoryData = getTransactionsByCategory();
+  const {transactions, getTotalIncome, getTotalExpenses} = useTransactionStore();
+  const totalIncome = getTotalIncome();
+  const used = transactions.filter(t => t.type === 'expense').reduce((sum, budget) => sum + budget.amount, 0);
+  const categoryBudget = 750;
+  const expenseTypes = [...transactions].filter(t => t.type === 'expense');
+  const expenseByCategory = [...transactions]
+  .filter(t => t.type === 'expense')
+  .reduce((acc, curr) => {
+    const { categoryId, amount = 0 } = curr;
+    if (!categoryId) return acc; // skip if no categoryId
+
+    if (!acc[categoryId]) {
+      acc[categoryId] = amount;
+    } else {
+      acc[categoryId] += amount;
+    }
+
+    return acc;
+  }, {});
+
   
   // Convert data to format needed for recharts
-  const data = Object.entries(categoryData)
-    .filter(([_, value]) => value > 0) // Only include categories with expenses
+  const data = Object.entries(expenseByCategory)
+    .filter(([_, value]) => parseFloat(value.toString()) > 0) // Only include categories with expenses
     .map(([name, value], index) => ({
       name,
       value,
@@ -44,7 +65,7 @@ const ExpensePieChart = () => {
                 paddingAngle={2}
                 dataKey="value"
                 labelLine={false}
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                label={({ name, percent }) => `${name[0].toUpperCase() + name.slice(1, name.length)} ${(percent * 100).toFixed(0)}%`}
               >
                 {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />

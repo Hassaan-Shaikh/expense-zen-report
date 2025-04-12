@@ -3,13 +3,38 @@ import { budgets, getCategoryById } from "@/lib/data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import CategoryBadge from "@/components/ui/CategoryBadge";
+import useTransactionStore from "@/store/Transaction";
+import { useEffect } from "react";
 
 const BudgetProgress = () => {
+  const {transactions, getTotalIncome, getTotalExpenses} = useTransactionStore();
+  const totalIncome = getTotalIncome();
+  const used = transactions.filter(t => t.type === 'expense').reduce((sum, budget) => sum + budget.amount, 0);
+  const categoryBudget = 750;
+  const expenseTypes = [...transactions].filter(t => t.type === 'expense');
+  const expenseByCategory = [...transactions]
+  .filter(t => t.type === 'expense')
+  .reduce((acc, curr) => {
+    const { categoryId, amount = 0 } = curr;
+    if (!categoryId) return acc; // skip if no categoryId
+
+    if (!acc[categoryId]) {
+      acc[categoryId] = amount;
+    } else {
+      acc[categoryId] += amount;
+    }
+
+    return acc;
+  }, {});
+
+  useEffect(() => {
+    console.log(expenseByCategory)
+  }, [])
+
   // Sort budgets by percentage spent (descending)
-  const sortedBudgets = [...budgets].sort(
-    (a, b) => (b.spent / b.amount) - (a.spent / a.amount)
-  );
-  
+  // const sortedBudgets = [...transactions].sort(
+  //   (a, b) => (b.spent / b.amount) - (a.spent / a.amount)
+  // );
   return (
     <Card className="col-span-1 animate-fade-in [animation-delay:300ms]">
       <CardHeader>
@@ -17,9 +42,8 @@ const BudgetProgress = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {sortedBudgets.map((budget) => {
-            const category = getCategoryById(budget.categoryId);
-            const percentage = Math.round((budget.spent / budget.amount) * 100);
+        {Object.entries(expenseByCategory).map(([budget, amount]) => {
+            const percentage = Math.round((parseFloat(amount.toString()) / categoryBudget) * 100);
             let statusColor = "text-expense-green";
             
             if (percentage >= 90) {
@@ -31,14 +55,14 @@ const BudgetProgress = () => {
             }
             
             return (
-              <div key={budget.id} className="space-y-2">
+              <div key={budget} className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <CategoryBadge categoryId={budget.categoryId} />
-                    <span className="text-sm font-medium">{category.name}</span>
+                    <CategoryBadge categoryId={budget} />
+                    <span className="text-sm font-medium">{budget[0].toUpperCase() + budget.slice(1, budget.length)}</span>
                   </div>
                   <div className={`text-sm font-medium ${statusColor}`}>
-                    ${budget.spent.toFixed(0)} / ${budget.amount.toFixed(0)}
+                    ${amount.toString()} / ${categoryBudget.toFixed(0)}
                   </div>
                 </div>
                 <Progress 

@@ -25,7 +25,7 @@ const Index = () => {
     <div className="flex min-h-screen bg-background">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
-      <div className={`flex flex-1 flex-col transition-all duration-300`}>
+      <div className={`flex flex-1 flex-col ml-4 transition-all duration-300`}>
         <Navbar onToggleSidebar={toggleSidebar} />
         
         <main className="flex-1 p-4 md:p-6">
