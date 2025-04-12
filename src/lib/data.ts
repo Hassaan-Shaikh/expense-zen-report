@@ -155,12 +155,12 @@ export const getTransactionsByCategory = (): Record<string, number> => {
 
 export const getMonthlySpending = (): { name: string; amount: number }[] => {
   return [
-    { name: 'Jan', amount: 1200 },
-    { name: 'Feb', amount: 1100 },
-    { name: 'Mar', amount: 1300 },
-    { name: 'Apr', amount: 900 },
-    { name: 'May', amount: 1500 },
-    { name: 'Jun', amount: 1000 },
+    { name: 'Oct', amount: 1200 },
+    { name: 'Nov', amount: 1100 },
+    { name: 'Dec', amount: 1300 },
+    { name: 'Jan', amount: 900 },
+    { name: 'Feb', amount: 1500 },
+    { name: 'Mar', amount: 1000 },
   ];
 };
 
