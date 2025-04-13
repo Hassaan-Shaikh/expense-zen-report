@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   BarChart3, 
@@ -38,19 +37,25 @@ import {
   DrawerFooter,
   DrawerClose,
 } from "@/components/ui/drawer";
-import { Transaction, transactions } from "@/lib/data";
+import { Transaction } from "@/lib/data";
 import TransactionItem from "@/components/Transactions/TransactionItem";
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  transactions: Transaction[];
+  onDeleteTransaction: (id: string) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = ({ 
+  isOpen, 
+  onClose, 
+  transactions, 
+  onDeleteTransaction 
+}) => {
   const isMobile = useIsMobile();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isRemoveTransactionsOpen, setIsRemoveTransactionsOpen] = useState(false);
-  const [userTransactions, setUserTransactions] = useState<Transaction[]>(transactions);
   
   // Function for downloading reports
   const downloadReport = (type: 'monthly' | 'annual' | 'export') => {
@@ -92,15 +97,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     toast({
       title: "Report Downloaded",
       description: `Your ${type} report has been downloaded.`,
-    });
-  };
-
-  // Function to handle transaction deletion
-  const handleDeleteTransaction = (id: string) => {
-    setUserTransactions((current) => current.filter(t => t.id !== id));
-    toast({
-      title: "Transaction Removed",
-      description: "The transaction has been successfully removed.",
     });
   };
 
@@ -225,12 +221,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               <DrawerDescription>Select transactions to remove</DrawerDescription>
             </DrawerHeader>
             <div className="px-4 py-2 max-h-[70vh] overflow-y-auto">
-              {userTransactions.length > 0 ? (
-                userTransactions.map((transaction) => (
+              {transactions.length > 0 ? (
+                transactions.map((transaction) => (
                   <TransactionItem 
                     key={transaction.id} 
                     transaction={transaction} 
-                    onDelete={handleDeleteTransaction}
+                    onDelete={onDeleteTransaction}
                   />
                 ))
               ) : (
@@ -385,12 +381,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             <DrawerDescription>Select transactions to remove</DrawerDescription>
           </DrawerHeader>
           <div className="px-4 py-2 max-h-[60vh] overflow-y-auto">
-            {userTransactions.length > 0 ? (
-              userTransactions.map((transaction) => (
+            {transactions.length > 0 ? (
+              transactions.map((transaction) => (
                 <TransactionItem 
                   key={transaction.id} 
                   transaction={transaction} 
-                  onDelete={handleDeleteTransaction}
+                  onDelete={onDeleteTransaction}
                 />
               ))
             ) : (

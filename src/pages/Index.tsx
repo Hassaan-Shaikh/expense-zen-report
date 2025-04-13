@@ -11,19 +11,35 @@ import SpendingTrendChart from "@/components/Charts/SpendingTrendChart";
 import BudgetProgress from "@/components/Budgets/BudgetProgress";
 import TransactionForm from "@/components/Transactions/TransactionForm";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Transaction, transactions } from "@/lib/data";
+import { toast } from "@/hooks/use-toast";
 
 const Index = () => {
   const isMobile = useIsMobile();
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
   const [showTransactionForm, setShowTransactionForm] = useState(false);
+  const [appTransactions, setAppTransactions] = useState<Transaction[]>(transactions);
   
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
   
+  const handleDeleteTransaction = (id: string) => {
+    setAppTransactions((current) => current.filter(t => t.id !== id));
+    toast({
+      title: "Transaction Deleted",
+      description: "The transaction has been successfully removed.",
+    });
+  };
+  
   return (
     <div className="flex min-h-screen bg-background">
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar 
+        isOpen={sidebarOpen} 
+        onClose={() => setSidebarOpen(false)} 
+        transactions={appTransactions}
+        onDeleteTransaction={handleDeleteTransaction}
+      />
       
       <div className={`flex flex-1 flex-col transition-all duration-300`}>
         <Navbar onToggleSidebar={toggleSidebar} />
@@ -47,7 +63,10 @@ const Index = () => {
                 <SpendingTrendChart />
                 <ExpensePieChart />
                 <BudgetProgress />
-                <TransactionsWrapper />
+                <TransactionsWrapper 
+                  customTransactions={appTransactions} 
+                  onDeleteTransaction={handleDeleteTransaction} 
+                />
               </div>
             </div>
           </div>
