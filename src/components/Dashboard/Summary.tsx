@@ -10,7 +10,7 @@ const Summary = () => {
   const {transactions, getTotalIncome, getTotalExpenses} = useTransactionStore();
   const totalIncome = getTotalIncome();
   const totalExpenses = getTotalExpenses();
-  const totalBudget = 1500;
+  let totalBudget = totalIncome * 0.7;
   const balance = totalIncome - totalExpenses;
   // const { total: budgetTotal, used: budgetUsed } = getBudgetStatus();
   const used = transactions.filter(t => t.type === 'expense').reduce((sum, budget) => sum + budget.amount, 0);
@@ -74,9 +74,7 @@ const Summary = () => {
           </div>
           <Progress value={budgetPercentage} className="mt-2" />
           <p className="mt-2 text-xs text-muted-foreground">
-            {budgetPercentage < 75 
-              ? "On track with your budget" 
-              : "Approaching budget limit"}
+            {budgetPercentage < 75 ? "On track with your budget" : (budgetPercentage >= 100 ? "Total budget used" : "Approaching budget limit")}
           </p>
         </CardContent>
       </Card>

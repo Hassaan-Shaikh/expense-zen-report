@@ -37,7 +37,7 @@ const Index = () => {
       <Sidebar 
         isOpen={sidebarOpen} 
         onClose={() => setSidebarOpen(false)} 
-        transactions={appTransactions}
+        Transactions={appTransactions}
         onDeleteTransaction={handleDeleteTransaction}
       />
       

@@ -10,22 +10,22 @@ const BudgetProgress = () => {
   const {transactions, getTotalIncome, getTotalExpenses} = useTransactionStore();
   const totalIncome = getTotalIncome();
   const used = transactions.filter(t => t.type === 'expense').reduce((sum, budget) => sum + budget.amount, 0);
-  const categoryBudget = 750;
   const expenseTypes = [...transactions].filter(t => t.type === 'expense');
   const expenseByCategory = [...transactions]
   .filter(t => t.type === 'expense')
   .reduce((acc, curr) => {
     const { categoryId, amount = 0 } = curr;
     if (!categoryId) return acc; // skip if no categoryId
-
+    
     if (!acc[categoryId]) {
       acc[categoryId] = amount;
     } else {
       acc[categoryId] += amount;
     }
-
+    
     return acc;
   }, {});
+  let categoryBudget = (totalIncome * 0.7) / Object.entries(expenseByCategory).length;
 
   useEffect(() => {
     console.log(expenseByCategory)
