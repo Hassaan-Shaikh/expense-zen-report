@@ -245,7 +245,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   <TransactionItem 
                     key={transaction.id} 
                     transaction={transaction} 
-                    onDelete={onDeleteTransaction}
+                    onDelete={deleteTransaction}
                   />
                 ))
               ) : (
@@ -409,7 +409,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <TransactionItem 
                   key={transaction.id} 
                   transaction={transaction} 
-                  onDelete={onDeleteTransaction}
+                  onDelete={deleteTransaction}
                 />
               ))
             ) : (
