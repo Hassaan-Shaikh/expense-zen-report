@@ -19,8 +19,9 @@ const ExpensePieChart = () => {
   const categoryData = getTransactionsByCategory();
   const {transactions, getTotalIncome, getTotalExpenses} = useTransactionStore();
   const totalIncome = getTotalIncome();
+  const totalExpenses = getTotalExpenses();
   const used = transactions.filter(t => t.type === 'expense').reduce((sum, budget) => sum + budget.amount, 0);
-  const categoryBudget = 750;
+  const balance = totalIncome - totalExpenses
   const expenseTypes = [...transactions].filter(t => t.type === 'expense');
   const expenseByCategory = [...transactions]
   .filter(t => t.type === 'expense')
@@ -36,7 +37,7 @@ const ExpensePieChart = () => {
 
     return acc;
   }, {});
-
+  let categoryBudget = balance <= 0 ? 0 : (totalIncome * 0.7) / Object.entries(expenseByCategory).length;
   
   // Convert data to format needed for recharts
   const data = Object.entries(expenseByCategory)

@@ -14,7 +14,7 @@ const Summary = () => {
   let totalBudget = balance <= 0 ? 0 : totalIncome * 0.7;
   // const { total: budgetTotal, used: budgetUsed } = getBudgetStatus();
   const used = transactions.filter(t => t.type === 'expense').reduce((sum, budget) => sum + budget.amount, 0);
-  const budgetPercentage = Math.round((used / totalBudget) * 100);
+  const budgetPercentage = balance <= 0 ? 0 : Math.round((used / totalBudget) * 100);
   
   useEffect(() => {
     console.log(totalIncome)
