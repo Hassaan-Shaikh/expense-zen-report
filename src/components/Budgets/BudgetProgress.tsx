@@ -9,8 +9,10 @@ import { useEffect } from "react";
 const BudgetProgress = () => {
   const {transactions, getTotalIncome, getTotalExpenses} = useTransactionStore();
   const totalIncome = getTotalIncome();
+  const totalExpenses = getTotalExpenses();
   const used = transactions.filter(t => t.type === 'expense').reduce((sum, budget) => sum + budget.amount, 0);
   const expenseTypes = [...transactions].filter(t => t.type === 'expense');
+  const balance = totalIncome - totalExpenses
   const expenseByCategory = [...transactions]
   .filter(t => t.type === 'expense')
   .reduce((acc, curr) => {
@@ -25,7 +27,7 @@ const BudgetProgress = () => {
     
     return acc;
   }, {});
-  let categoryBudget = (totalIncome * 0.7) / Object.entries(expenseByCategory).length;
+  let categoryBudget = balance <= 0 ? 0 : (totalIncome * 0.7) / Object.entries(expenseByCategory).length;
 
   useEffect(() => {
     console.log(expenseByCategory)
