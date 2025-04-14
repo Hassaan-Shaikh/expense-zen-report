@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   BarChart3, 
@@ -39,21 +38,28 @@ import {
   DrawerFooter,
   DrawerClose,
 } from "@/components/ui/drawer";
-import { Transaction, transactions } from "@/lib/data";
+import { Transaction } from "@/lib/data";
 import TransactionItem from "@/components/Transactions/TransactionItem";
 import TransactionForm from "../Transactions/TransactionForm";
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  Transactions: Transaction[];
+  onDeleteTransaction: (id: string) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = ({ 
+  isOpen, 
+  onClose, 
+  Transactions, 
+  onDeleteTransaction 
+}) => {
   const isMobile = useIsMobile();
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isRemoveTransactionsOpen, setIsRemoveTransactionsOpen] = useState(false);
   const {transactions, getTotalIncome, getTotalExpenses, deleteTransaction} = useTransactionStore();
-  const [userTransactions, setUserTransactions] = useState<Transaction[]>(transactions);
+  const [userTransactions, setUserTransactions] = useState<Transaction[]>(Transactions);
   const [showTransactionForm, setShowTransactionForm] = useState(false);
   
   // Function for downloading reports
@@ -234,12 +240,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               <DrawerDescription>Select transactions to remove</DrawerDescription>
             </DrawerHeader>
             <div className="px-4 py-2 max-h-[70vh] overflow-y-auto">
-              {userTransactions.length > 0 ? (
-                userTransactions.map((transaction) => (
+              {transactions.length > 0 ? (
+                transactions.map((transaction) => (
                   <TransactionItem 
                     key={transaction.id} 
                     transaction={transaction} 
-                    onDelete={handleDeleteTransaction}
+                    onDelete={onDeleteTransaction}
                   />
                 ))
               ) : (
@@ -403,7 +409,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 <TransactionItem 
                   key={transaction.id} 
                   transaction={transaction} 
-                  onDelete={handleDeleteTransaction}
+                  onDelete={onDeleteTransaction}
                 />
               ))
             ) : (
